@@ -27,7 +27,7 @@ def get_data(days, tickers):
     for company in tickers.keys():
         tkr = yf.Ticker(tickers[company])
         hist = tkr.history(period=f'{days}d')
-        hist.index = hist.index.strftime('%d %B %Y')
+        hist.index = hist.index.map(lambda x: x.strftime('%d %B %Y'))
         hist = hist[['Close']]
         hist.columns = [company]
         hist = hist.T
@@ -45,7 +45,7 @@ ymin, ymax = st.sidebar.slider(
 
 tickers = {
     'apple': 'AAPL',
-    'facebook': 'FB',
+    'Meta': 'META',
     'google': 'GOOGL',
     'microsoft': 'MSFT',
     'netflix': 'NFLX',
@@ -54,9 +54,9 @@ tickers = {
 
 df = get_data(days, tickers)
 companies = st.multiselect(
-    '会社名を洗濯して下さい。',
+    '会社名を選択して下さい。',
     list(df.index),
-    ('google', 'amazon', 'facebook', 'apple')
+    ('google', 'amazon', 'Meta', 'apple')
 )
 
 if not companies:
